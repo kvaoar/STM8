@@ -180,11 +180,5 @@ void ftoc( int in)
 }
 
 
-s16 Get_ADC()
-{
-	GPIO_WriteLow(SPI_PORT, CS_ADC);
 
-
-
-}
 
