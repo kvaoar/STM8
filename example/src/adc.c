@@ -31,7 +31,6 @@ val |= (tmp>>2);
 tmp = res[1];
 val |= (tmp<<6);
 tmp = res[2];
-tmp = 1;
 val |= (tmp<<14);
 return val;
 

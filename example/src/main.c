@@ -61,17 +61,7 @@ display_init();
   while(1)            
   {
 	  delay1(900000);
-	  delay1(900000);
-	  delay1(900000);
-	  delay1(900000);
-	  delay1(900000);
-	  delay1(900000);
-	  delay1(900000);
-	  delay1(900000);
-	  delay1(900000);
-	  delay1(900000);
-	  delay1(900000);
-	  cc++;
+
 	  val = adc_get();
 	  ftoc(val);
   }
