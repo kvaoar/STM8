@@ -1,7 +1,7 @@
 #include "stm8s.h"
 #include "stm8s_gpio.h"
 #include "display.h"
-
+#include "adc.h"
 
 #define SPI_PORT  GPIOC
 #define CS_LED    GPIO_PIN_3
@@ -25,44 +25,55 @@ while(del)
 }
 }
 
+void spi_config(){
 
+
+	GPIO_DeInit(SPI_PORT);
+	GPIO_Init(SPI_PORT, CS_ADC|CS_LED, GPIO_MODE_OUT_PP_HIGH_SLOW);
+
+
+   CLK_DeInit();
+   CLK_SYSCLKConfig(CLK_PRESCALER_CPUDIV1);
+   CLK_SYSCLKConfig(CLK_PRESCALER_HSIDIV1); // set 16 MHz for CPU
+
+   SPI_DeInit();
+   SPI_Init
+   (
+     SPI_FIRSTBIT_MSB, SPI_BAUDRATEPRESCALER_8, SPI_MODE_MASTER, //16/8 = 2mhz clk freq
+     SPI_CLOCKPOLARITY_LOW, SPI_CLOCKPHASE_1EDGE,
+     SPI_DATADIRECTION_2LINES_FULLDUPLEX, SPI_NSS_SOFT, 0x00
+   );
+
+   SPI_Cmd(ENABLE);
+
+}
 
 
 int main( void )
 {
-
-
-
-        	GPIO_DeInit(SPI_PORT);
-        	GPIO_Init(SPI_PORT, CS_ADC|CS_LED, GPIO_MODE_OUT_PP_HIGH_SLOW);
-
-
-	       CLK_DeInit();
-	       CLK_SYSCLKConfig(CLK_PRESCALER_CPUDIV1);
-	       CLK_SYSCLKConfig(CLK_PRESCALER_HSIDIV1); // set 16 MHz for CPU
-
-	       SPI_DeInit();
-	       SPI_Init
-	       (
-	         SPI_FIRSTBIT_MSB, SPI_BAUDRATEPRESCALER_8, SPI_MODE_MASTER, //16/8 = 2mhz clk freq
-	         SPI_CLOCKPOLARITY_LOW, SPI_CLOCKPHASE_1EDGE,
-	         SPI_DATADIRECTION_2LINES_FULLDUPLEX, SPI_NSS_SOFT, 0x00
-	       );
-
-	       SPI_Cmd(ENABLE);
-
-
+uint16_t val = 0;
+spi_config();
 
 
 delay1(50000);
-max7219_clean();
-max7219_setIntensivity(0x0f);
+display_init();
 
   while(1)            
   {
 	  delay1(900000);
+	  delay1(900000);
+	  delay1(900000);
+	  delay1(900000);
+	  delay1(900000);
+	  delay1(900000);
+	  delay1(900000);
+	  delay1(900000);
+	  delay1(900000);
+	  delay1(900000);
+	  delay1(900000);
 	  cc++;
-	  ftoc(cc);
+	  val = adc_get();
+	  ftoc(val);
   }
 }
 

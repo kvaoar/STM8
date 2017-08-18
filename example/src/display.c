@@ -22,6 +22,10 @@ uint16_t getSymbol(uint8_t number) {
 }
 
 
+void display_init(){
+	max7219_clean();
+	max7219_setIntensivity(0x0f);
+}
 
 void sendData(signed short data) {
 

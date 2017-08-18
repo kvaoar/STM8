@@ -9,6 +9,11 @@
 #define INC_ADC_H_
 
 #include "stm8s.h"
-uint32_t adc_get();
+
+#define ADC_PORT  GPIOC
+#define ADC_CS    GPIO_PIN_4
+
+
+uint16_t adc_get();
 
 #endif /* INC_ADC_H_ */

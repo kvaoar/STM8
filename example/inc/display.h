@@ -31,7 +31,7 @@ typedef enum {
 }
 MAX7219_REGISTERS;
 
-
+void display_init();
 unsigned short getSymbol(uint8_t number);
 void sendData(signed short data);
 void printError(void);
