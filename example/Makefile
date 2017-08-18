@@ -2,10 +2,12 @@ MCU=stm8
 DEVICE=stm8s003f3
 FLASHER=stlinkv2
 LIBDIR=libs
-CFLAGS= --std-c99  -I$(LIBDIR) -DSTM8S003 -c
+INCDIR=inc
+SRCDIR=src
+CFLAGS= --std-c99  -I$(LIBDIR) -I$(INCDIR) -DSTM8S003 -c
 CC=sdcc
-LIB=stm8s_gpio.rel stm8s_spi.rel stm8s_clk.rel
-TARGET=leds
+LIB=stm8s_gpio.rel stm8s_spi.rel stm8s_clk.rel adc.rel display.rel
+TARGET=main
 OBJ=$(TARGET).rel
 
 OUTDIR=build
@@ -17,15 +19,19 @@ OUTDIR=build
 
 %.rel:$(LIBDIR)/%.c
 	$(CC) -m$(MCU) $(CFLAGS) $(LDFLAGS) $<
+	
+%.rel:$(SRCDIR)/%.c
+	$(CC) -m$(MCU) $(CFLAGS) $(LDFLAGS) $<
 
 all: $(OBJ) $(LIB)
+	@mkdir -p $(OUTDIR)
 	$(CC) -m$(MCU) -o $(OUTDIR)/$(TARGET).ihx $(OBJ) $(LIB)
 	objcopy -Iihex -Obinary $(OUTDIR)/$(TARGET).ihx $(OUTDIR)/$(TARGET).bin
-	ls -l $(OUTDIR)/$(TARGET).bin 
-	rm -v *.sym *.asm *.lst *.rel *.rst > /dev/null
+	size --format=Berkeley $(OUTDIR)/$(TARGET).ihx
+	@rm -v *.sym *.asm *.lst *.rel *.rst > /dev/null
 
 run:	
 	stm8flash -c $(FLASHER) -p $(DEVICE) -s flash -w $(OUTDIR)/$(TARGET).ihx
      
 clean:
-	rm -v *.sym *.asm *.lst *.rel *.ihx *.lk *.rst *.cdb *.map > /dev/null
+	rm -vrf $(OUTDIR) *.sym *.asm *.lst *.rel *.ihx *.lk *.rst *.cdb *.map 
