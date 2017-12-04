@@ -77,12 +77,12 @@ phaze Ph[3];
 } BLDC;
 
 BLDC BLDC_states[6] = {
-		{{1,0,1},{Z ,HI,LO}},
-		{{1,0,0},{LO,HI,Z }},
-		{{1,1,0},{LO,Z ,HI}},
-		{{0,1,0},{Z ,LO,HI}},
-		{{0,1,1},{HI,LO,Z }},
-		{{0,0,1},{HI,Z ,LO}}
+		{{1,0,1},{Z ,HI,LO}}, //5
+		{{1,0,0},{LO,HI,Z }}, //4
+		{{1,1,0},{LO,Z ,HI}}, //6
+		{{0,1,0},{Z ,LO,HI}},//2
+		{{0,1,1},{HI,LO,Z }}, //3
+		{{0,0,1},{HI,Z ,LO}} //1
 };
 
 void PhUpd(uint8_t ph_name, phaze ph_state){
@@ -113,17 +113,19 @@ void BLDC_Upd(uint8_t step){
 
 uint8_t BLDC_GetStep(){
 	int i = 0;
+	 //5 -> 0
+	 //4 -> 1
+	 //6 -> 2
+	 //2 -> 3
+	 //3 -> 4
+	 //1 -> 5
 
-	uint8_t read_h[3] = {0,0,0};
-	if(GPIO_ReadInputPin(H1_PORT,H1_PIN) == SET) read_h[0] = 1 ; else read_h[0] = 0 ;
-	if(GPIO_ReadInputPin(H1_PORT,H2_PIN) == SET) read_h[1] = 1 ; else read_h[1] = 0 ;
-	if(GPIO_ReadInputPin(H1_PORT,H3_PIN) == SET) read_h[2] = 1 ; else read_h[2] = 0 ;
+	const uint8_t dictonary[] = {5,3,4,1,0,2};
 
+	uint8_t port = (((H1_PORT->IDR)>>4)&0x07);
+	if((port >0)&&(port <7))
+		return dictonary[(port-1)];
 
-	for(i = 0; i <6; i++){
-		if((BLDC_states[i].h[0] == read_h[0])&&(BLDC_states[i].h[1] == read_h[1])&&(BLDC_states[i].h[2] == read_h[2]))
-			return i;
-	}
 
 	return 0xFF;
 
